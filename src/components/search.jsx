@@ -30,7 +30,7 @@ class Search extends Component {
   }
 
   searchQuery(query) {
-    const newState = Axios.post(`http://localhost:3000/search/${query}`)
+    const newState = Axios.post(`/search/${query}`)
       .then(response =>
         // set the state to the API response
         // var mergedObj = Object.assign{this.state, response.data};
@@ -40,7 +40,7 @@ class Search extends Component {
 
   singleRecipe(id) {
     console.log(id)
-    const newState = Axios.post(`http://localhost:3000/single/${id}`)
+    const newState = Axios.post(`/single/${id}`)
       .then(response =>
         // set the state to the API response
         // var mergedObj = Object.assign{this.state, response.data};

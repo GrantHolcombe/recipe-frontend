@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Image from 'material-ui-image'
 import Axios from 'axios';
 
 class Input extends Component {
@@ -13,6 +14,8 @@ class Input extends Component {
     this.addIngredient = this.addIngredient.bind(this);
     this.rmIngredient = this.rmIngredient.bind(this);
     this.sendIt = this.sendIt.bind(this);
+    this.sendImg = this.sendImg.bind(this);
+    this.rmImg = this.rmImg.bind(this);
 
     this.state = {
       ingredients: [
@@ -23,7 +26,8 @@ class Input extends Component {
         }
       ],
       instructions:"",
-      dishName:""
+      dishName:"",
+      imageUrl: ""
     };
 
   }
@@ -73,17 +77,45 @@ class Input extends Component {
   }
 
   sendIt() {
-    Axios.post('http://localhost:3000/new', this.state );
+    Axios.post('/new', this.state ).then(()=>{
+    this.setState({
+      ingredients: [
+        {
+          ingAmount: 0,
+          ingUnit: '',
+          ingName: ''
+        }
+      ],
+      instructions:"",
+      dishName:"",
+      imageUrl: ""
+    });
+  });
   }
 
   updateDish(id,view) {
-    Axios.post(`http://localhost:3000/update/${id}`, this.state ).then(() =>
+    Axios.post(`/update/${id}`, this.state ).then(() =>
       view()
   );
   }
 
+  sendImg(e) {
+    e.preventDefault();
+    let file = e.target.files[0];
+    const fd = new FormData();
+    fd.append('image',file, file.name)
+    console.log(fd);
+    Axios.post(`/image-upload/`, fd).then((response) =>{
+        this.setState({imageUrl: response.data.imageUrl})
+    });
+  }
+
+  rmImg(){
+    this.setState({imageUrl:""})
+  }
+
   loadDish(id) {
-    Axios.post(`http://localhost:3000/loadDish/${id}`)
+    Axios.post(`/loadDish/${id}`)
     .then(response =>
       // set the state to the API response
       this.setState(response.data[0])
@@ -120,6 +152,18 @@ class Input extends Component {
         ))}
       <Button onClick={this.addIngredient}>Add Ingredient Row</Button>
       <TextField multiline fullWidth name="instructions" onChange={this.handleIns} rows="5" col="160" placeholder="Enter instructions on how to prepare this meal" value={this.state.instructions}></TextField>
+      {
+        this.state.imageUrl
+        ?
+        <Grid item xs={4}>
+        <Button onClick={() => this.rmImg()} style={{position: 'relative', top: 35, zIndex: 1}}>X</Button>
+        <Image style={{width: '100%', height: 'auto'}} src={this.state.imageUrl} />
+        </Grid>
+        :
+        <Button containerElement='label' label='My Label'>
+           <input type="file" onChange={this.sendImg} />
+        </Button>
+      }
       <Button onClick={this.props.edit ? () => this.updateDish(this.props.edit,this.props.view) : this.sendIt}>Save</Button>
 
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Image from 'material-ui-image'
 import Axios from 'axios';
 
 class Single extends Component {
@@ -17,7 +18,7 @@ class Single extends Component {
     var twoStep = window.confirm('Are you sure you want to delete this? Cant be undone.');
 
     if(twoStep){
-        Axios.get(`http://localhost:3000/delete/${id}`)
+        Axios.get(`/delete/${id}`)
         .then(response =>
           // set the state to the API response
           console.log(response)
@@ -45,16 +46,22 @@ class Single extends Component {
               : null
             }
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <ul>
               {this.props.data.ingredients.map((ingredient,index) => (
                 <li key={index}>{ingredient.ingAmount}<sub>{ingredient.ingUnit}</sub> {ingredient.ingName} </li>
               ))}
             </ul>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <p>{this.props.data.instructions}</p>
           </Grid>
+
+
+          <Grid item xs={12}>
+            {this.props.data.imageUrl ? <Image width="100%" height='auto' src={this.props.data.imageUrl} alt={this.props.data.dishName}/> : null}
+          </Grid>
+
         </Grid>
       </Paper>
     );

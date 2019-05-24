@@ -31,7 +31,7 @@ class All extends Component {
   }
 
   refresh() {
-    const newState = Axios.get('http://localhost:3000/all')
+    const newState = Axios.get('/all')
       .then(response =>
         // set the state to the API response
         this.setState({data:response.data})
@@ -51,7 +51,7 @@ class All extends Component {
 
   singleRecipe(id) {
     console.log(id)
-    const newState = Axios.post(`http://localhost:3000/single/${id}`)
+    const newState = Axios.post(`/single/${id}`)
       .then(response =>
         // set the state to the API response
         // var mergedObj = Object.assign{this.state, response.data};
@@ -71,7 +71,7 @@ class All extends Component {
              :
              <Grid direction="row" container md={12} spacing={24}>
              <Grid item xs={12}>
-               <h1>All Recepies</h1>
+               <h1>All Recipes</h1>
              </Grid>
                <Grid item md={4} sm={12}>
                   <List>
